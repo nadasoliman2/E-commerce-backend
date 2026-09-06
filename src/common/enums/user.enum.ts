@@ -15,3 +15,7 @@ export enum LogoutEnum {
   ALL,
   only,
 }
+export enum LanguageEnum {
+  AR = 'Ar',
+  EN = 'en',
+}

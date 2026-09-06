@@ -1,5 +1,11 @@
-import { GenderEnum, RoleEnum, ProviderEnum } from '../enums/user.enum.js';
+import {
+  GenderEnum,
+  RoleEnum,
+  ProviderEnum,
+  LanguageEnum,
+} from '../enums/user.enum.js';
 export interface IUser {
+  lang: LanguageEnum;
   firstName: string;
   lastName: string;
   username?: string;

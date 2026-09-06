@@ -11,9 +11,28 @@ import {
   IsOptional,
   IsString,
   ValidateIf,
+  Matches,
 } from 'class-validator';
 
 import { IsMatch } from '../../../common/decorator/index';
+export class ResendConfirmEmailDto {
+  @IsEmail({}, { message: 'Please enter a valid email address' })
+  email!: string;
+}
+export class ConfirmEmailDto extends ResendConfirmEmailDto {
+  @Matches(/^\d{6}$/, { message: 'OTP must be a 6-digit number' })
+  otp!: string;
+}
+export class resetforgotPassword extends ConfirmEmailDto {
+  @IsStrongPassword({
+    minNumbers: 3,
+    minLowercase: 1,
+    minUppercase: 1,
+    minSymbols: 1,
+  })
+  password!: string;
+}
+
 export class LoginDto {
   @IsEmail({}, { message: 'Please enter a valid email address' })
   email!: string;
@@ -42,4 +61,11 @@ export class SignupDto extends LoginDto {
   @IsString()
   @IsOptional()
   phone?: string;
+  @IsString()
+  @IsOptional()
+  role?: string;
+}
+export class SignupWithGmailDto {
+  @IsString()
+  idToken!: string;
 }

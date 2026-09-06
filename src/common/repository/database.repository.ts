@@ -182,9 +182,9 @@ export abstract class DatabaseRepository<TRawDoc> {
     options,
   }: {
     _id?: Types.ObjectId | string;
-    projection?: ProjectionType<TRawDoc> | null | undefined;
-    options?: (QueryOptions<TRawDoc> & { lean: true }) | null | undefined;
-  }): Promise<null | FlattenMaps<TRawDoc>>;
+    projection?: ProjectionType<TRawDoc> | null;
+    options?: (QueryOptions<TRawDoc> & { lean?: false }) | null;
+  }): Promise<TRawDoc | null>;
   async findbyid({
     _id,
     projection,

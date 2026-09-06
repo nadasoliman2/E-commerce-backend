@@ -10,6 +10,9 @@ import { OrderModule } from './modules/order/order.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
+import { SharedAuthenticationModule } from './common/modules/index';
+import { S3Service } from 'src/common/services';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +31,7 @@ import { Connection } from 'mongoose';
         return connection;
       },
     }),
+    SharedAuthenticationModule,
     AuthenticationModule,
     UserModule,
     ProductModule,
@@ -36,6 +40,6 @@ import { Connection } from 'mongoose';
     OrderModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, S3Service],
 })
 export class AppModule {}

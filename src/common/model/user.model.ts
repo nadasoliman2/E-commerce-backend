@@ -6,7 +6,12 @@ import {
   Virtual,
 } from '@nestjs/mongoose';
 import { IUser } from '../interfaces/index';
-import { RoleEnum, GenderEnum, ProviderEnum } from '../enums/index';
+import {
+  LanguageEnum,
+  RoleEnum,
+  GenderEnum,
+  ProviderEnum,
+} from '../enums/index';
 import { HydratedDocument } from 'mongoose';
 import { generateHash, encrypt } from '../modules/security/index';
 @Schema({
@@ -15,6 +20,7 @@ import { generateHash, encrypt } from '../modules/security/index';
   toJSON: { virtuals: true },
   strict: true,
   strictQuery: true,
+  collection:"User"
 })
 export class User implements IUser {
   @Prop({ type: String, required: true })
@@ -38,6 +44,12 @@ export class User implements IUser {
 
   @Prop({ type: Number, enum: GenderEnum, default: GenderEnum.MALE })
   gender!: GenderEnum;
+  @Prop({
+    type: String,
+    enum: Object.values(LanguageEnum),
+    default: LanguageEnum.AR,
+  })
+  lang!: LanguageEnum;
   @Prop({ type: Number, enum: RoleEnum, default: RoleEnum.USER })
   role!: RoleEnum;
   @Prop({ type: Number, enum: ProviderEnum, default: ProviderEnum.SYSTEM })
@@ -122,3 +134,4 @@ export const UserModel = MongooseModule.forFeatureAsync([
     },
   },
 ]);
+export type UserDocument = HydratedDocument<User>;

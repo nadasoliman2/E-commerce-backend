@@ -1,34 +1,19 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
-import { UserModel } from 'src/common/model/index';
-import { UserRepository } from 'src/common/repository/index';
-import { createClient } from 'redis';
-import { ConfigService } from '@nestjs/config';
-import{ CachingService } from 'src/common/services/caching.services';
 
-
+import { EmailService } from 'src/common/services/index';
+import { defaultlanguage } from 'src/common/middleware/index';
 @Module({
-  imports: [UserModel],
-  exports: [AuthenticationService, 'Client_Redis', CachingService],
+  imports: [],
+  exports: [AuthenticationService],
   controllers: [AuthenticationController],
-  providers: [
-    {
-      provide: 'Client_Redis',
-      useFactory: async (configService: ConfigService) => {
-        const client = createClient({
-          url: configService.get<string>('REDIS_URI'),
-        });
-        client.on('error', (err) => console.log('Redis Client Error', err));
-        await client.connect();
-        console.log('Connected to Redis');
-        return client;
-      },
-      inject: [ConfigService],
-    },
-    AuthenticationService,
-    UserRepository,
-    CachingService,
-  ],
+  providers: [AuthenticationService, EmailService],
 })
-export class AuthenticationModule {}
+export class AuthenticationModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(defaultlanguage)
+      .forRoutes({ path: 'auth/signup', method: RequestMethod.ALL });
+  }
+}
